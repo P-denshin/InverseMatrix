@@ -1,0 +1,6 @@
+D:\Document\GitHub\ReduceEquations\ReduceEquations\bin\Debug\ReduceEquations.exe.config
+D:\Document\GitHub\ReduceEquations\ReduceEquations\bin\Debug\ReduceEquations.exe
+D:\Document\GitHub\ReduceEquations\ReduceEquations\bin\Debug\ReduceEquations.pdb
+D:\Document\GitHub\ReduceEquations\ReduceEquations\obj\Debug\ReduceEquations.csprojResolveAssemblyReference.cache
+D:\Document\GitHub\ReduceEquations\ReduceEquations\obj\Debug\ReduceEquations.exe
+D:\Document\GitHub\ReduceEquations\ReduceEquations\obj\Debug\ReduceEquations.pdb
