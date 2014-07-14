@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ReduceEquations {
+    /// <summary>
+    /// 分数を扱う
+    /// </summary>
     class Fraction {
         long numerator, denominator;
 
@@ -35,20 +38,16 @@ namespace ReduceEquations {
         /// <summary>
         /// 逆数にする
         /// </summary>
-        public void Reciprocal() {
-            if (numerator == 0) return;
-            else {
-                long tmp;
-                tmp = numerator;
-                numerator = denominator;
-                denominator = tmp;
-            }
+        public Fraction Reciprocal() {
+            if (numerator == 0) throw new ArithmeticException("分母が0の数値は定義されません。"); 
+            else
+                return new Fraction(denominator, numerator);
         }
 
         /// <summary>
         /// 既約分数にする
         /// </summary>
-        public void Irreducible() {
+        public Fraction Irreducible() {
             List<long> numer_insu = new List<long>();
             List<long> denom_insu = new List<long>();
             long numer, denom;
@@ -56,7 +55,7 @@ namespace ReduceEquations {
             numer = numerator;
             denom = denominator;
 
-            if (numer == 0) { numerator = 0; denominator = 1; return; }
+            if (numer == 0)  return new Fraction(0, 1); 
 
             //分子分母が負の場合と、分母だけ負の場合は分子分母に-1をかけて、分子がマイナスになるようにする。
             if ((numer < 0 && denom < 0) || (numer > 0 && denom < 0)) {
@@ -118,8 +117,8 @@ namespace ReduceEquations {
             if (nume_minus) {
                 numer = -numer;
             }
-            numerator = numer;
-            denominator = denom;
+
+            return new Fraction(numer, denom);
         }
         #endregion
 
@@ -132,9 +131,9 @@ namespace ReduceEquations {
             return new Fraction(r_numer1 + r_numer2, r_denom);
         }
 
-        Fraction operator -(Fraction obj) { return new Fraction(-obj.Numerator, obj.Denominator); }
+        public static Fraction operator -(Fraction obj) { return new Fraction(-obj.Numerator, obj.Denominator); }
 
-        Fraction operator -(Fraction obj1, Fraction obj2) {
+        public static Fraction operator -(Fraction obj1, Fraction obj2) {
             long r_numer1, r_numer2, r_denom;
             r_numer1 = obj1.Numerator * obj2.Denominator;
             r_numer2 = obj2.Numerator * obj2.Denominator;
@@ -142,11 +141,11 @@ namespace ReduceEquations {
             return new Fraction(r_numer1 - r_numer2, r_denom);
         }
 
-        Fraction operator *(Fraction obj1, Fraction obj2) {
+        public static Fraction operator *(Fraction obj1, Fraction obj2) {
             return new Fraction(obj1.Numerator * obj2.Numerator, obj1.Denominator * obj2.Denominator);
         }
 
-        Fraction operator /(Fraction obj1, Fraction obj2) {
+        public static Fraction operator /(Fraction obj1, Fraction obj2) {
             if (obj2.Numerator == 0) {
                 throw new DivideByZeroException();
             }
@@ -154,6 +153,15 @@ namespace ReduceEquations {
                 return new Fraction(obj1.Numerator * obj2.Denominator, obj1.Denominator * obj2.Numerator);
             }
         }
+
+        public static explicit operator Fraction(int obj) {
+            return new Fraction(obj, 1);
+        }
+
+        public static explicit operator Fraction(long obj) {
+            return new Fraction(obj, 1);
+        }
+
         #endregion
 
         #region "コンストラクタ"
@@ -162,7 +170,7 @@ namespace ReduceEquations {
         /// </summary>
         /// <param name="num">分子</param>
         /// <param name="den">分母</param>
-        Fraction(long num, long den) {
+        public Fraction(long num, long den) {
             numerator = num;
             if (den == 0) denominator = 1;
             else denominator = den;
@@ -171,7 +179,7 @@ namespace ReduceEquations {
         /// <summary>
         /// １で初期化します
         /// </summary>
-        Fraction() {
+        public Fraction() {
             numerator = 1;
             denominator = 1;
         }
