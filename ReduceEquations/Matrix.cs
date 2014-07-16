@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace ReduceEquations {
     class Matrix {
+        /// <summary>
+        /// 行,列
+        /// </summary>
         public Fraction[,] Value;
         int col, row;
-
+        
         #region プロパティ
         /// <summary>
         /// 行数（１～）
@@ -25,7 +28,8 @@ namespace ReduceEquations {
         /// 逆行列を作る
         /// </summary>
         /// <returns>対する逆行列</returns>
-        public Matrix MakeInverse() { return new Matrix(); }
+        public Matrix Inverse() {
+        }
 
         public int GetRank() { return 0; }
 
@@ -44,22 +48,48 @@ namespace ReduceEquations {
         /// <summary>
         /// 2*2単位行列を生成
         /// </summary>
-        public Matrix() { }
+        public Matrix() {
+            Value = new Fraction[2, 2];
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 2; j++) {
+                    if (i == j)
+                        Value[i, j] = (Fraction)1;
+                    else
+                        Value[i, j] = (Fraction)0;
+                }
+            }
+        }
 
         /// <summary>
         /// 任意の大きさの行列を生成。要素は全て0
         /// </summary>
-        /// <param name="col">行数</param>
-        /// <param name="row">列数</param>
-        public Matrix(int col, int row) { }
+        /// <param name="row">行数</param>
+        /// <param name="colmun">列数</param>
+        public Matrix(int row, int col) { 
+            Value = new Fraction[row,col];
+            for (int i = 0; i < row; i++)
+                for (int j = 0; j < col; j++)
+                    this.Value[i, j] = (Fraction)0;
+        }
 
         /// <summary>
         /// 任意の行列を生成
         /// </summary>
-        /// <param name="col">行数</param>
-        /// <param name="row">列数</param>
+        /// <param name="row">行数</param>
+        /// <param name="col">列数</param>
         /// <param name="value">要素（a[0][0], a[1][0], ..., a[col][row]の順）</param>
-        public Matrix(int col, int row, int[] value) { }
+        public Matrix(int row, int col, Fraction[] value) {
+            Value = new Fraction[row, col];
+            int counter = 0;
+
+            for (int i = 0; i < row; i++) {
+                for (int j = 0; j < col; j++) {
+                    Value[i, j] = value[counter];
+                    counter++;
+                }
+            }
+        }
+
         #endregion
     }
 }
