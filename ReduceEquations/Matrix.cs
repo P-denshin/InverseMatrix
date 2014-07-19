@@ -103,6 +103,18 @@ namespace ReduceEquations {
             return new Matrix(n, n, result);
         }
 
+        public void Show() {
+            for (int i = 0; i < row; i++) {
+                for (int j = 0; j < col; j++) {
+                    if (Value[i, j].Denominator == 1)
+                        Console.Write(Value[i, j].Numerator + "\t");
+                    else
+                        Console.Write(Value[i, j].Numerator + "/" + Value[i, j].Denominator + "\t");
+                }
+                Console.WriteLine();
+            }
+        }
+
         public int GetRank() { return 0; }
 
         #endregion
@@ -111,7 +123,11 @@ namespace ReduceEquations {
         public static Matrix operator +(Matrix obj1, Matrix obj2) { return new Matrix(); }
         public static Matrix operator -(Matrix obj1, Matrix obj2) { return new Matrix(); }
         public static Matrix operator -(Matrix obj) { return new Matrix(); }
-        public static Matrix operator *(Matrix obj1, Matrix obj2) { return new Matrix(); }
+
+        public static Matrix operator *(Matrix obj1, Matrix obj2) { 
+            return new Matrix(); 
+        }
+
         public static Matrix operator *(Fraction obj1, Matrix obj2) { return new Matrix(); }
         public static Matrix operator *(Matrix obj1, Fraction obj2) { return new Matrix(); }
         #endregion
