@@ -154,11 +154,11 @@ namespace ReduceEquations {
             }
         }
 
-        public static explicit operator Fraction(int obj) {
+        public static implicit operator Fraction(int obj) {
             return new Fraction(obj, 1);
         }
 
-        public static explicit operator Fraction(long obj) {
+        public static implicit operator Fraction(long obj) {
             return new Fraction(obj, 1);
         }
 

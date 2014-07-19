@@ -29,6 +29,78 @@ namespace ReduceEquations {
         /// </summary>
         /// <returns>対する逆行列</returns>
         public Matrix Inverse() {
+            int n = row;    //n次正方行列
+            Fraction[,] ext = new Fraction[n, n * 2];        //単位行列を横に置く行列
+            Fraction[] buff_1 = new Fraction[n * 2];        //計算過程の行　引かれる行
+            Fraction[] buff_2 = new Fraction[n * 2];        //引く行
+            Fraction[] buff_res = new Fraction[n * 2];     //引いた結果の行
+
+            if (row != col) 
+                throw new ArithmeticException("正方でない行列に逆行列は定義されません。");
+
+            //拡大行列を作成
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n * 2; j++) {
+                    //左側
+                    if (j < n) {
+                        ext[i, j] = Value[i, j];
+                    } else {    //右の単位行列
+                        if (i == (j - n))
+                            ext[i, j] = (Fraction)1;
+                        else
+                            ext[i, j] = (Fraction)0;
+                    }
+                }
+            }
+
+            //上三角的計算...OK!
+            for (int j = 0; j < n - 1; j++) {
+                for (int i = j + 1; i < n; i++) {
+                    for (int k = 0; k < n * 2; k++) {
+                        buff_1[k] = ext[j, k] * ext[i, j];
+                        buff_2[k] = ext[i, k] * ext[j, j];
+                        buff_res[k] = buff_1[k] - buff_2[k];
+                    }
+                    for(int k = 0; k < n * 2; k++)
+                        ext[i, k] = buff_res[k];
+                }
+            }
+
+            if (ext[n - 1, n - 1].Numerator == 0) {
+                throw new ArithmeticException("行列は正則ではありません。");
+            }
+
+            //下三角的計算・・・おｋ！
+            for (int j = n - 1; j > 0; j--) {
+                for (int i = j - 1; i >= 0; i--) {
+                    for (int k = 0; k < n * 2; k++) {
+                        buff_1[k] = ext[j, k] * ext[i, j];
+                        buff_2[k] = ext[i, k] * ext[j, j];
+                        buff_res[k] = buff_1[k] - buff_2[k];
+                    }
+                    for (int k = 0; k < n * 2; k++)
+                        ext[i, k] = buff_res[k];
+                }
+            }
+
+            //割る
+            for (int i = 0; i < n; i++) {
+                Fraction rec = ext[i, i].Reciprocal();
+                for(int k = 0; k < n * 2; k++){
+                    ext[i, k] = ext[i,k] * rec;
+                    ext[i, k] = ext[i, k].Irreducible();
+                }
+            }
+
+            //逆行列部分の取り出し
+            Fraction[,] result = new Fraction[n, n];
+            for (int i = 0; i < n; i++) {
+                for (int j = n; j < n * 2; j++) {
+                        result[i, j-n] = ext[i, j];
+                }
+            }
+
+            return new Matrix(n, n, result);
         }
 
         public int GetRank() { return 0; }
@@ -63,27 +135,41 @@ namespace ReduceEquations {
         /// <summary>
         /// 任意の大きさの行列を生成。要素は全て0
         /// </summary>
-        /// <param name="row">行数</param>
+        /// <param name="r">行数</param>
         /// <param name="colmun">列数</param>
-        public Matrix(int row, int col) { 
-            Value = new Fraction[row,col];
-            for (int i = 0; i < row; i++)
-                for (int j = 0; j < col; j++)
+        public Matrix(int r, int c) { 
+            Value = new Fraction[r,c];
+            row = r; col = c;
+            for (int i = 0; i < r; i++)
+                for (int j = 0; j < c; j++)
                     this.Value[i, j] = (Fraction)0;
+        }
+
+
+        /// <summary>
+        /// 任意の行列を生成
+        /// </summary>
+        /// <param name="r">行数</param>
+        /// <param name="c">列数</param>
+        /// <param name="value">要素</param>
+        public Matrix(int r, int c,  Fraction[,] value) {
+            Value = value;
+            row = r; col = c;
         }
 
         /// <summary>
         /// 任意の行列を生成
         /// </summary>
-        /// <param name="row">行数</param>
-        /// <param name="col">列数</param>
-        /// <param name="value">要素（a[0][0], a[1][0], ..., a[col][row]の順）</param>
-        public Matrix(int row, int col, Fraction[] value) {
-            Value = new Fraction[row, col];
+        /// <param name="r">行数</param>
+        /// <param name="c">列数</param>
+        /// <param name="value">要素（a[0][0], a[0][1], ..., a[row][col]の順）</param>
+        public Matrix(int r, int c, params Fraction[] value) {
+            Value = new Fraction[r, c];
+            row = r; col = c;
             int counter = 0;
 
-            for (int i = 0; i < row; i++) {
-                for (int j = 0; j < col; j++) {
+            for (int i = 0; i < r; i++) {
+                for (int j = 0; j < c; j++) {
                     Value[i, j] = value[counter];
                     counter++;
                 }
