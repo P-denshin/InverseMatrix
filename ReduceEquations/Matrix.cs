@@ -45,13 +45,6 @@ namespace ReduceEquations {
                     }
                 }
             }
-
-            Console.WriteLine("初期式");
-            (new Matrix(ext)).Show();
-            Console.WriteLine();
-            
-            Console.WriteLine();
-            Console.WriteLine("上三角");
             //上計算...OK!
             for (int j = 0; j < n - 1; j++) {
                 for (int i = j + 1; i < n; i++) {
@@ -59,7 +52,6 @@ namespace ReduceEquations {
                     if (ext[j, j].Numerator == 0) {     //行交換
                         bool ischange = false;
                         int k = 0;
-                        Console.WriteLine("A");
                         do {
                             if (ext[k, j].Numerator != 0) {  //0じゃないならここで交換や！
                                 Fraction[] tmp = new Fraction[n * 2];
@@ -85,18 +77,13 @@ namespace ReduceEquations {
                             buff_res[k] = buff_res[k].Irreducible();
                             ext[i, k] = buff_res[k];
                     }
-                    (new Matrix(ext)).Show();
-                    Console.WriteLine();
                 }
             }
-            Console.WriteLine("上三角終");
-            Console.WriteLine();
 
             if (ext[n - 1, n - 1].Numerator == 0) {
                 throw new ArithmeticException("行列は正則ではありません。");
             }
 
-            Console.WriteLine("下三角");
             //下計算・・・
             for (int j = n - 1; j > 0; j--) {
                 for (int i = j - 1; i >= 0; i--) {
@@ -133,7 +120,6 @@ namespace ReduceEquations {
                     Console.WriteLine();
                 }
             }
-            Console.WriteLine("上三角終");
 
             //割る
             for (int i = 0; i < n; i++) {
