@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReduceEquations {
     class Matrix {
-        /// <summary>
-        /// 行,列
-        /// </summary>
         public Fraction[,] Value;
         int col, row;
         
@@ -53,35 +46,94 @@ namespace ReduceEquations {
                 }
             }
 
-            //上三角的計算...OK!
+            Console.WriteLine("初期式");
+            (new Matrix(ext)).Show();
+            Console.WriteLine();
+            
+            Console.WriteLine();
+            Console.WriteLine("上三角");
+            //上計算...OK!
             for (int j = 0; j < n - 1; j++) {
                 for (int i = j + 1; i < n; i++) {
-                    for (int k = 0; k < n * 2; k++) {
-                        buff_1[k] = ext[j, k] * ext[i, j];
-                        buff_2[k] = ext[i, k] * ext[j, j];
-                        buff_res[k] = buff_1[k] - buff_2[k];
+
+                    if (ext[j, j].Numerator == 0) {     //行交換
+                        bool ischange = false;
+                        int k = 0;
+                        Console.WriteLine("A");
+                        do {
+                            if (ext[k, j].Numerator != 0) {  //0じゃないならここで交換や！
+                                Fraction[] tmp = new Fraction[n * 2];
+                                for (int kk = 0; kk < n * 2; kk++) 
+                                    tmp[kk] = ext[j, kk];
+                                for (int kk = 0; kk < n * 2; kk++)
+                                    ext[j, kk] = ext[k, kk];
+                                for (int kk = 0; kk < n * 2; kk++)
+                                    ext[k, kk] = tmp[kk];
+                                ischange = true;
+                            }
+                            k++;
+                        } while (!ischange);
                     }
-                    for(int k = 0; k < n * 2; k++)
-                        ext[i, k] = buff_res[k];
+
+                    //計算
+                    for (int k = 0; k < n * 2; k++) {
+                            buff_1[k] = (ext[j, k] * ext[i, j]).Irreducible();
+                            buff_2[k] = (ext[i, k] * ext[j, j]).Irreducible();
+                            buff_res[k] = buff_1[k] - buff_2[k];
+                    }
+                    for (int k = 0; k < n * 2; k++) {
+                            buff_res[k] = buff_res[k].Irreducible();
+                            ext[i, k] = buff_res[k];
+                    }
+                    (new Matrix(ext)).Show();
+                    Console.WriteLine();
                 }
             }
+            Console.WriteLine("上三角終");
+            Console.WriteLine();
 
             if (ext[n - 1, n - 1].Numerator == 0) {
                 throw new ArithmeticException("行列は正則ではありません。");
             }
 
-            //下三角的計算・・・おｋ！
+            Console.WriteLine("下三角");
+            //下計算・・・
             for (int j = n - 1; j > 0; j--) {
                 for (int i = j - 1; i >= 0; i--) {
-                    for (int k = 0; k < n * 2; k++) {
-                        buff_1[k] = ext[j, k] * ext[i, j];
-                        buff_2[k] = ext[i, k] * ext[j, j];
-                        buff_res[k] = buff_1[k] - buff_2[k];
+
+                    if (ext[j, j].Numerator == 0) {     //行交換
+                        bool ischange = false;
+                        int k = 0;
+                        do {
+                            if (ext[k, j].Numerator != 0) {  //0じゃないならここで交換や！
+                                Fraction[] tmp = new Fraction[n * 2];
+                                for (int kk = 0; kk < n * 2; kk++)
+                                    tmp[kk] = ext[j, kk];
+                                for (int kk = 0; kk < n * 2; kk++)
+                                    ext[j, kk] = ext[k, kk];
+                                for (int kk = 0; kk < n * 2; kk++)
+                                    ext[k, kk] = tmp[kk];
+                                ischange = true;
+                            }
+                            k++;
+                        } while (!ischange);
                     }
-                    for (int k = 0; k < n * 2; k++)
-                        ext[i, k] = buff_res[k];
+
+                    //計算
+                    for (int k = 0; k < n * 2; k++) {
+                            buff_1[k] = (ext[j, k] * ext[i, j]).Irreducible();
+                            buff_2[k] = (ext[i, k] * ext[j, j]).Irreducible();
+                            buff_res[k] = buff_1[k] - buff_2[k];
+                    }
+                    for (int k = 0; k < n * 2; k++) {
+                            buff_res[k] = buff_res[k].Irreducible();
+                            ext[i, k] = buff_res[k];
+                    }
+                    (new Matrix(ext)).Show();
+                    Console.WriteLine();
                 }
             }
+            Console.WriteLine("上三角終");
 
             //割る
             for (int i = 0; i < n; i++) {
@@ -100,9 +152,12 @@ namespace ReduceEquations {
                 }
             }
 
-            return new Matrix(n, n, result);
+            return new Matrix(result);
         }
 
+        /// <summary>
+        /// コンソール上に表示
+        /// </summary>
         public void Show() {
             for (int i = 0; i < row; i++) {
                 for (int j = 0; j < col; j++) {
@@ -115,11 +170,29 @@ namespace ReduceEquations {
             }
         }
 
-        public int GetRank() { return 0; }
+        /// <summary>
+        /// ２数のgcdを求める
+        /// </summary>
+        private long Euclid(long a, long b) {
+            long big, small, r;   //大きいのがbig rはあまり
+            a = Math.Abs(a);
+            b = Math.Abs(b);
+            if (a > b) {
+                big = a; small = b;
+            } else {
+                big = b; small = a;
+            }
 
+            r = big % small;
+
+            if (r == 0)
+                return small;
+            else
+                return Euclid(small, r);
+        }
         #endregion
 
-        #region 演算子
+        #region 演算子、今はまだ実装せず
         public static Matrix operator +(Matrix obj1, Matrix obj2) { return new Matrix(); }
         public static Matrix operator -(Matrix obj1, Matrix obj2) { return new Matrix(); }
         public static Matrix operator -(Matrix obj) { return new Matrix(); }
@@ -165,12 +238,10 @@ namespace ReduceEquations {
         /// <summary>
         /// 任意の行列を生成
         /// </summary>
-        /// <param name="r">行数</param>
-        /// <param name="c">列数</param>
         /// <param name="value">要素</param>
-        public Matrix(int r, int c,  Fraction[,] value) {
+        public Matrix(Fraction[,] value) {
             Value = value;
-            row = r; col = c;
+            row = value.GetLength(0); col = value.GetLength(1);
         }
 
         /// <summary>
@@ -191,7 +262,6 @@ namespace ReduceEquations {
                 }
             }
         }
-
         #endregion
     }
 }

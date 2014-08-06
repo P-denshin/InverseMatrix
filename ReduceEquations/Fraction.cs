@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReduceEquations {
     /// <summary>
@@ -34,7 +30,7 @@ namespace ReduceEquations {
         }
         #endregion
 
-        #region "関数"
+        #region メソッド
         /// <summary>
         /// 逆数にする
         /// </summary>
@@ -48,86 +44,55 @@ namespace ReduceEquations {
         /// 既約分数にする
         /// </summary>
         public Fraction Irreducible() {
-            List<long> numer_insu = new List<long>();
-            List<long> denom_insu = new List<long>();
+            if (this.Numerator == 0)
+                return new Fraction(0, 1);
+            
+            long gcd = Euclid(this.Numerator, this.Denominator);
             long numer, denom;
-            bool nume_minus = false;
-            numer = numerator;
-            denom = denominator;
+            numer = this.Numerator / gcd;
+            denom = this.Denominator / gcd;
 
-            if (numer == 0)  return new Fraction(0, 1); 
-
-            //分子分母が負の場合と、分母だけ負の場合は分子分母に-1をかけて、分子がマイナスになるようにする。
-            if ((numer < 0 && denom < 0) || (numer > 0 && denom < 0)) {
-                numer = -numer;
-                denom = -denom;
-            }
-            if (numer < 0) {
-                nume_minus = true;
-                numer = -numer;
-            }
-
-            //素因数分解
-            long k = 2;
-            long tmp = numer;
-            while (tmp >= k) {
-                if (tmp % k == 0) {
-                    numer_insu.Add(k);
-                    tmp /= k;
-                }
-                else if (k == 2) {
-                    k = 3;
-                }
-                else {
-                    k += 2;
-                }
-            }
-
-
-            k = 2;
-            tmp = denom;
-            while (tmp >= k) {
-                if (tmp % k == 0) {
-                    denom_insu.Add(k);
-                    tmp /= k;
-                }
-                else if (k == 2) {
-                    k = 3;
-                }
-                else {
-                    k += 2;
-                }
-            }
-
-            //約分
-            for (int i = 0; i < numer_insu.Count; i++)
-                for (int j = 0; j < denom_insu.Count; j++)
-                    if (numer_insu[i] == denom_insu[j]) {
-                        numer_insu[i] = 1;
-                        denom_insu[j] = 1;
-                    }
-
-            //すべてかける。
-            numer = 1; denom = 1;
-            for (int i = 0; i < numer_insu.Count; i++)
-                numer *= numer_insu[i];
-            for (int i = 0; i < denom_insu.Count; i++)
-                denom *= denom_insu[i];
-
-            if (nume_minus) {
-                numer = -numer;
+            if (denom < 0) {
+                denom = -denom; numer = -numer;
             }
 
             return new Fraction(numer, denom);
+        }
+
+        /// <summary>
+        /// 2数のｇｃｄを求める
+        /// </summary>
+        private long Euclid(long a, long b) {
+            long big, small, r;   //大きいのがbig rはあまり
+            a = Math.Abs(a);
+            b = Math.Abs(b);
+            if (a > b) {
+                big = a; small = b;
+            } else {
+                big = b; small = a;
+            }
+            
+            r = big % small;
+
+            if (r == 0)
+                return small;
+            else
+                return Euclid(small, r);
+        }
+
+        public void Show() {
+            Console.WriteLine(numerator + "/" + denominator + " ");
         }
         #endregion
 
         #region "演算子"
         public static Fraction operator +(Fraction obj1, Fraction obj2) {
             long r_numer1, r_numer2, r_denom;
-            r_numer1 = obj1.Numerator * obj2.Denominator;
-            r_numer2 = obj2.Numerator * obj1.Denominator;
-            r_denom = obj1.Denominator * obj2.Denominator;
+            checked {
+                r_numer1 = obj1.Numerator * obj2.Denominator;
+                r_numer2 = obj2.Numerator * obj1.Denominator;
+                r_denom = obj1.Denominator * obj2.Denominator;
+            }
             return new Fraction(r_numer1 + r_numer2, r_denom);
         }
 
@@ -135,14 +100,16 @@ namespace ReduceEquations {
 
         public static Fraction operator -(Fraction obj1, Fraction obj2) {
             long r_numer1, r_numer2, r_denom;
-            r_numer1 = obj1.Numerator * obj2.Denominator;
-            r_numer2 = obj2.Numerator * obj2.Denominator;
-            r_denom = obj2.Denominator * obj1.Denominator;
+            checked {
+                r_numer1 = obj1.Numerator * obj2.Denominator;
+                r_numer2 = obj2.Numerator * obj2.Denominator;
+                r_denom = obj2.Denominator * obj1.Denominator;
+            }
             return new Fraction(r_numer1 - r_numer2, r_denom);
         }
 
         public static Fraction operator *(Fraction obj1, Fraction obj2) {
-            return new Fraction(obj1.Numerator * obj2.Numerator, obj1.Denominator * obj2.Denominator);
+            return new Fraction(checked(obj1.Numerator * obj2.Numerator), checked(obj1.Denominator * obj2.Denominator));
         }
 
         public static Fraction operator /(Fraction obj1, Fraction obj2) {
@@ -150,7 +117,7 @@ namespace ReduceEquations {
                 throw new DivideByZeroException();
             }
             else {
-                return new Fraction(obj1.Numerator * obj2.Denominator, obj1.Denominator * obj2.Numerator);
+                return new Fraction(checked(obj1.Numerator * obj2.Denominator), checked(obj1.Denominator * obj2.Numerator));
             }
         }
 
