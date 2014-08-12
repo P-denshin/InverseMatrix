@@ -13,7 +13,6 @@ namespace ReduceEquations {
         /// </summary>
         public int Row { get { return row; } }
         #endregion
-
         #region メソッド
         /// <summary>
         /// 逆行列を作る
@@ -105,18 +104,16 @@ namespace ReduceEquations {
                     }
                     //計算
                     for (int k = 0; k < n * 2; k++) {
-                        buff_1[k] = (ext[j, k] * ext[i, j]).Irreducible();
-                        buff_2[k] = (ext[i, k] * ext[j, j]).Irreducible();
+                        buff_1[k] = (ext[j, k].Irreducible() * ext[i, j].Irreducible()).Irreducible();
+                        buff_2[k] = (ext[i, k].Irreducible() * ext[j, j].Irreducible()).Irreducible();
                         buff_res[k] = (buff_1[k] - buff_2[k]).Irreducible();
                     }
                     for (int k = 0; k < n * 2; k++) {
                         buff_res[k] = buff_res[k].Irreducible();
                         ext[i, k] = buff_res[k];
                     }
-                    
                 }
             }
-
             if (ext[n - 1, n - 1].Numerator == 0) {
                 throw new ArithmeticException("行列は正則ではありません。");
             }
@@ -182,8 +179,8 @@ namespace ReduceEquations {
                     }
                     //計算
                     for (int k = 0; k < n * 2; k++) {
-                        buff_1[k] = (ext[j, k] * ext[i, j]).Irreducible();
-                        buff_2[k] = (ext[i, k] * ext[j, j]).Irreducible();
+                        buff_1[k] = (ext[j, k].Irreducible() * ext[i, j].Irreducible()).Irreducible();
+                        buff_2[k] = (ext[i, k].Irreducible() * ext[j, j].Irreducible()).Irreducible();
                         buff_res[k] = (buff_1[k] - buff_2[k]).Irreducible();
                     }
                     for (int k = 0; k < n * 2; k++) {
@@ -192,7 +189,6 @@ namespace ReduceEquations {
                     }
                 }
             }
-
             //割る
             for (int i = 0; i < n; i++) {
                 Fraction rec = ext[i, i].Reciprocal();
@@ -201,7 +197,6 @@ namespace ReduceEquations {
                     ext[i, k] = ext[i, k].Irreducible();
                 }
             }
-
             //逆行列部分の取り出し
             Fraction[,] result = new Fraction[n, n];
             for (int i = 0; i < n; i++) {
@@ -244,7 +239,6 @@ namespace ReduceEquations {
                 return Euclid(small, r);
         }
         #endregion
-
         #region 演算子、今はまだ実装せず
         public static Matrix operator +(Matrix obj1, Matrix obj2) { return new Matrix(); }
         public static Matrix operator -(Matrix obj1, Matrix obj2) { return new Matrix(); }
@@ -255,7 +249,6 @@ namespace ReduceEquations {
         public static Matrix operator *(Fraction obj1, Matrix obj2) { return new Matrix(); }
         public static Matrix operator *(Matrix obj1, Fraction obj2) { return new Matrix(); }
         #endregion
-
         #region コンストラクタ
         /// <summary>
         /// 2*2単位行列を生成
