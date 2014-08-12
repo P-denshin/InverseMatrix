@@ -102,7 +102,7 @@ namespace ReduceEquations {
             long r_numer1, r_numer2, r_denom;
             checked {
                 r_numer1 = obj1.Numerator * obj2.Denominator;
-                r_numer2 = obj2.Numerator * obj2.Denominator;
+                r_numer2 = obj2.Numerator * obj1.Denominator;
                 r_denom = obj2.Denominator * obj1.Denominator;
             }
             return new Fraction(r_numer1 - r_numer2, r_denom);

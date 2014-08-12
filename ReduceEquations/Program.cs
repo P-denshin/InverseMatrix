@@ -4,17 +4,18 @@ namespace ReduceEquations {
     class Program {
         static void Main(string[] args) {
             Console.WriteLine("逆行列を計算するプログラムです。");
+
             String yn = null;
             do {
                 int n = 0;
                 do {
-                    Console.Write("n * n ? (nは2~5) >>");
+                    Console.Write("n * n ? (nは2~) >>");
                     try {
                         n = int.Parse(Console.ReadLine());
                     } catch (Exception) {
                         Console.WriteLine("ちゃんと数を入力しようね！");
                     }
-                } while (n <= 1 || n > 5);
+                } while (n <= 1);
 
                 Fraction[,] fr = new Fraction[n, n];
                 Console.WriteLine();
@@ -26,6 +27,8 @@ namespace ReduceEquations {
                     Fraction[] rowfr = new Fraction[n];
                     try {
                         rowfr = ToRow(rowstr, n);
+                    } catch (FormatException) {
+                        Console.WriteLine("入力形式がきちんとしていません");
                     } catch (Exception) {
                         Console.WriteLine("要素が足りません。もう一度入力してください。");
                         i--; continue;
@@ -35,8 +38,11 @@ namespace ReduceEquations {
                 }
 
                 Matrix mr = new Matrix(fr);
+                Console.WriteLine("入力した行列");
+                mr.Show();
                 try {
                     mr = mr.Inverse();
+                    Console.WriteLine("入力の逆行列");
                     mr.Show();
                 } catch (Exception) {
                     Console.WriteLine("行列は正則ではありません。");
@@ -57,10 +63,10 @@ namespace ReduceEquations {
             Fraction[] result = new Fraction[col];      //返す配列
 
             //スペースが要素分あるかどうか確認
-            int last_indexer = 0;
+            int last_indexer = -1;
             for (int i = 0; i < col - 1; i++) {
-                last_indexer = str.IndexOf(' ', last_indexer);     //スペースのあるインデックス
-                if (last_indexer == -1) {
+                last_indexer = str.IndexOf(' ', last_indexer+1);     //スペースのあるインデックス
+                if (last_indexer < 0) {
                     throw new Exception();
                 }
             }
