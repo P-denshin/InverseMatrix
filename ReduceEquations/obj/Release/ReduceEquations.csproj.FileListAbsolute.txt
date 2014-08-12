@@ -1,0 +1,5 @@
+D:\Document\GitHub\ReduceEquations\ReduceEquations\bin\Release\ReduceEquations.exe.config
+D:\Document\GitHub\ReduceEquations\ReduceEquations\bin\Release\ReduceEquations.exe
+D:\Document\GitHub\ReduceEquations\ReduceEquations\bin\Release\ReduceEquations.pdb
+D:\Document\GitHub\ReduceEquations\ReduceEquations\obj\Release\ReduceEquations.exe
+D:\Document\GitHub\ReduceEquations\ReduceEquations\obj\Release\ReduceEquations.pdb
