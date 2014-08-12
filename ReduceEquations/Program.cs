@@ -29,6 +29,7 @@ namespace ReduceEquations {
                         rowfr = ToRow(rowstr, n);
                     } catch (FormatException) {
                         Console.WriteLine("入力形式がきちんとしていません");
+                        i--; continue;
                     } catch (Exception) {
                         Console.WriteLine("要素が足りません。もう一度入力してください。");
                         i--; continue;
