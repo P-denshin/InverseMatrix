@@ -29,6 +29,7 @@ namespace ReduceEquations {
             long[] ol_denom = new long[n * 2]; //１行分の分母　〃
             if (row != col)
                 throw new ArithmeticException("正方でない行列に逆行列は定義されません。");
+
             //拡大行列を作成
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n * 2; j++) {
@@ -211,6 +212,8 @@ namespace ReduceEquations {
             }
             return new Matrix(result);
         }
+
+
         /// <summary>
         /// コンソール上に表示
         /// </summary>
@@ -225,6 +228,8 @@ namespace ReduceEquations {
                 Console.WriteLine();
             }
         }
+
+
         /// <summary>
         /// ２数のgcdを求める
         /// </summary>

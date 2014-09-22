@@ -8,3 +8,4 @@ D:\Document\GitHub\InverseMatrix\ReduceEquations\bin\Release\ReduceEquations.exe
 D:\Document\GitHub\InverseMatrix\ReduceEquations\bin\Release\ReduceEquations.pdb
 D:\Document\GitHub\InverseMatrix\ReduceEquations\obj\Release\ReduceEquations.exe
 D:\Document\GitHub\InverseMatrix\ReduceEquations\obj\Release\ReduceEquations.pdb
+D:\Document\GitHub\InverseMatrix\ReduceEquations\obj\Release\ReduceEquations.csprojResolveAssemblyReference.cache

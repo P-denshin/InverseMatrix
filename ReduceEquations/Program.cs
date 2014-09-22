@@ -89,12 +89,21 @@ namespace ReduceEquations {
 
 
                 int sla_in = value.IndexOf('/');
-                if (sla_in == -1) {                 //切り取った要素が分数じゃない場合
-                    numer = long.Parse(value);
-                    denom = 1;
-                } else {        //分数の時
+                int dot_in = value.IndexOf('.');
+                if (sla_in != -1) {                 //切り取った要素が分数のとき
                     numer = long.Parse(value.Substring(0, sla_in));
                     denom = long.Parse(value.Substring(sla_in + 1));
+                } else if(dot_in != -1){    //切り取った要素が小数の時
+                    String int_part = value.Substring(0, dot_in);
+                    String dec_part = value.Substring(dot_in + 1);
+                    if (i == col - 1)
+                        denom = (long)Math.Pow(10, dec_part.Length);
+                    else
+                        denom = (long)Math.Pow(10, dec_part.Length - 1);
+                    numer = long.Parse(int_part + dec_part);
+                }else {        //分数の時ではないとき
+                    numer = long.Parse(value);
+                    denom = 1;
                 }
 
                 result[i] = new Fraction(numer, denom);
